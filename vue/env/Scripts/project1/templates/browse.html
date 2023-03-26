@@ -9,7 +9,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <title>browse</title>
+    <title>Inscription</title>
 
      <!-- Bootstrap core CSS -->
      <link href="{%static 'vendor/bootstrap/css/bootstrap.min.css'%}" rel="stylesheet">
@@ -69,8 +69,9 @@ https://templatemo.com/tm-579-cyborg-gaming
                       <li><a href="{%url 'home'%}" class="active">Home</a></li>
                       <li><a href="{%url 'attendancedetails'%}">Details</a></li>
                       <li><a href="{%url 'adminregister'%}">Inscription</a></li>
+                      <li><a href="{%url 'checking'%}">Live Checking</a></li>
                       <li><a href="{%url 'profiles'%}">Profile <img src="{%static 'assets/images/profile-header.jpg'%}" alt=""></a></li>
-                    </ul>   
+                  </ul>     
                     <a class='menu-trigger'>
                         <span>Menu</span>
                     </a>
@@ -81,16 +82,24 @@ https://templatemo.com/tm-579-cyborg-gaming
     </div>
   </header>
   <!-- ***** Header Area End ***** -->
-
+  
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
         <div class="page-content">
-
+         
           <!-- ***** Featured Games Start ***** -->
           <div class="row">
             <div class="col-lg-8">
               <div class="featured-games header-text">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" id="error">
+                  This User already Exists
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert" id="success">
+                  Successfully registed
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <div class="heading-section">
                   <h4><em>Face</em> Saving</h4>
                 </div>
@@ -99,11 +108,25 @@ https://templatemo.com/tm-579-cyborg-gaming
                    <img src="" alt="" class="img">
                   </div>
                 </div>
-                <div class=" col-lg-12 text-center main-border-button m-5"><a onclick="clicks()">Take Picture</a></div>
+                <div class=" col-lg-12 text-center main-border-button m-5"><a class= "img1" onclick="clicks()">Take Picture</a></div>
               </div>
             </div>
             <div class="col-lg-4">
               <div class="top-downloaded">
+                {%if message == 2 %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  This User already Exists
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {%endif%}
+                {%if message == 1 %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <strong>Registed</strong>  Successfully.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                  
+                
+                {%endif%}
                 <div class="heading-section">
                   <h4>Inscription</h4>
                 </div>
@@ -117,7 +140,7 @@ https://templatemo.com/tm-579-cyborg-gaming
                   {{form.idt}}
                   </div>
                   <button type="submit" class="container-fluid" style="background-color: rgb(31, 33, 34); border:none;">
-                  <div class="submit  text-center main-border-button m-5"><a class="submit">submit</a></div>
+                  <div class="text-center main-border-button m-5"><a class="submit">submit</a></div>
                 </button>
                 </form>
               
@@ -135,10 +158,30 @@ https://templatemo.com/tm-579-cyborg-gaming
 
 
  <script>
+  
+ document.getElementById("success").setAttribute("style","display:none")
+ document.getElementById("error").setAttribute("style","display:none")
    function clicks(){
-    document.querySelector(".img").setAttribute("src","{%url 'stream' id=1 %}")
+
+    submitstate=0
+    document.querySelector(".submit").addEventListener("click", function () {
+      submitstate=1;
+    })
+    // alert(document.querySelector(".img"));
+    if (document.querySelector(".img1").innerHTML==="Take Picture"){
+        
+      document.querySelector(".img1").innerHTML="finish";
+      if (submitstate===1){
+        document.querySelector(".img1").setAttribute("href","{%url 'adminregister'%}")
+          }
+      document.querySelector(".img").setAttribute("src","{%url 'stream' id=0 %}")
+    }else if(document.querySelector(".img1").innerHTML==="finish") {
+      location.reload()
+    }
+  
+    // .setAttribute("src","{%url 'stream' id=0 %}")
    }
- 
+
  
 
  </script>
@@ -151,7 +194,7 @@ https://templatemo.com/tm-579-cyborg-gaming
   <script src="{% static 'assets/js/tabs.js'%}"></script>
   <script src="{% static 'assets/js/popup.js'%}"></script>
   <script src="{% static 'assets/js/custom.js'%}"></script>
-
+<script src="{% static 'assets/js/index.js'%}"></script>
   </body>
 
 </html>

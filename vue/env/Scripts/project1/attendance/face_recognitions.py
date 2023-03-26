@@ -65,7 +65,8 @@ class Facedetection:
         try:  
         
          return self._data_convert(outputfilepath,"saving",inputimggpath,id)
-        except: return 0
+        
+        except: return 2
     def load_images_saved(self,databasefilepath):
          data=self._data_convert(databasefilepath,"loading","",0)
          return data
