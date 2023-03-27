@@ -10,6 +10,8 @@ from time import strftime
 from django.views.decorators.csrf import csrf_exempt
 import pickle
 import os
+import pandas as pd
+from tkinter import filedialog
 
 def gen(camera,id,request): 
     path=os.getcwd().replace("\\","/")
@@ -127,4 +129,17 @@ def auth(request):
     if request.method=="POST":
         print(request.POST)
     return render(request, "login.html")
-
+def generate(request):
+    attendanc=attendance.objects.all().order_by("date").order_by("hours")
+    data=[]
+    for i in attendanc.values():
+         name=Users.objects.filter(id=i["iduser"]).values()[0]["name"]
+         datatemp=[i["iduser"],name,i["date"],i["hours"]]
+         data.append(datatemp)
+    path=os.getcwd().replace("\\","/")     
+    
+    pathf=filedialog.askdirectory(initialdir=path,title="enter the folder path")     
+    pd.DataFrame(data,columns=["iduser","name","date","hours"]).to_excel(pathf+"file.xlsx","sheet1")     
+    return redirect(to="attendancedetails")
+    
+    
