@@ -19,15 +19,15 @@ class Facedetection:
 
     def _face_encoding(self,imagepath:str):
          image=self._load_image(imagepath)
-         
-         print("je suis l encodage a entregistrer",face_recognition.face_encodings(image)[0])
          return face_recognition.face_encodings(image)[0]
     
 
     def _load_database_file(self,filepath):
+       files=""
        with open(filepath,"rb") as file:
             files=pickle.Unpickler(file)
-            return files.load() 
+            files=files.load()
+       return files
        
         
     
@@ -37,11 +37,18 @@ class Facedetection:
     #  - side: is a parameter that inform if we will save or load data
     
     def _data_convert(self,databasefilepath,case:str,imgpath:str,id):
+        data={}
         try:
-           data=self._load_database_file(databasefilepath)
-        except:data={}
+           with open(databasefilepath,"rb") as file:
+                files=pickle.Unpickler(file)
+                data=files.load()
+        except:pass
+        print("je suis data ",data)
         if case=="saving":
                 data.update({f"{id}":self._face_encoding(imgpath)})
+                print("je suis data 2 ", data)
+                print("je suis len data 2 ", len(data))
+                
                 with open(databasefilepath,"wb") as file:
                     files=pickle.Pickler(file)
                     files.dump(data)
@@ -58,7 +65,7 @@ class Facedetection:
     # inputimggpath is the image path
     def face_saving(self,inputimggpath:str,outputfilepath:str,id):
        try: 
-           if len(self._data_convert(outputfilepath,"loading","",0))==0:
+           if len(self._data_convert(outputfilepath,"loading","",0))!=0:
                
                int("a")
        except:  

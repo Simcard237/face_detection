@@ -12,15 +12,16 @@ import pickle
 import os
 import pandas as pd
 from tkinter import filedialog
-
+global paths
+paths=os.getcwd().replace("\\","/")
 def gen(camera,id,request): 
-    path=os.getcwd().replace("\\","/")
+    
     resp=""
     while True:
         frame,resp = camera.get_frame(id)
-        print(resp)
+        
         if resp==1 or resp==2:
-            with open(path+"/static/assets/data/temp1.data","wb") as file:
+            with open(paths+"/static/assets/data/temp1.data","wb") as file:
                 fils=pickle.Pickler(file)
                 fils.dump(resp)
             return 0    
@@ -28,17 +29,15 @@ def gen(camera,id,request):
         else:
              if type(resp)==list:
                 #try:
-                  print(attendance.objects.filter(iduser=resp[0]).values()[0]["date"])
                   print("passer 2")
                   att=attendance() 
-                  print(attendance.objects.filter(iduser=resp[0]).values())
                   if len(attendance.objects.filter(iduser=resp[0]))==0:
                     att.iduser=resp[0]
                     att.date= datetime.now().strftime("%d-%m-%Y")
                     att.hours= datetime.now().strftime("%H:%M:%S")
                     att.status=True
                     att.save()
-                    with open(path+"/static/assets/data/temp2.data","wb") as file:
+                    with open(paths+"/static/assets/data/temp2.data","wb") as file:
                         fils=pickle.Pickler(file)
                         fils.dump(resp[0])
                         print("pass5")
@@ -49,7 +48,7 @@ def gen(camera,id,request):
                            att.hours= datetime.now().strftime("%H:%M:%S")
                            att.status=True
                            att.save()
-                           with open(path+"/static/assets/data/temp2.data","wb") as file:
+                           with open(paths+"/static/assets/data/temp2.data","wb") as file:
                                 fils=pickle.Pickler(file)
                                 fils.dump(resp[0])
                                 print("pass5")
@@ -66,28 +65,27 @@ def gen(camera,id,request):
 def video_feed(request,id):
     if request.method=="GET":
              print("method get pressed")
-    path=os.getcwd().replace("\\","/")
+    
     if id!=1: # when it's an inscription
         iduser=0
         try:
-            with open(path+"/static/assets/data/temp.data","rb") as file:
+            with open(paths+"/static/assets/data/temp.data","rb") as file:
              fil=pickle.Unpickler(file)
              id=fil.load()["value"]
-             print("je suis id ",id)
+             
              user=Users.objects.filter(idt=id).values()
 
              iduser=user[0]["id"]
             
             #except:pass   
             if iduser:
-                print("first enter")   
+                  
                 resp=gen(VideoCamera(),iduser,request)
-                print("je suis ",resp)
                 if resp not in [1,2]:
                     return StreamingHttpResponse(resp,content_type='multipart/x-mixed-replace; boundary=frame') 
                 else:
                     form=UsersForm()
-                    print("pass")
+                    
                     if resp==1:
                         return render(request,"browse.html",{"form":form,"message":1})  
                     return render(request,"browse.html",{"form":form,"message":2})    
@@ -136,9 +134,9 @@ def generate(request):
          name=Users.objects.filter(id=i["iduser"]).values()[0]["name"]
          datatemp=[i["iduser"],name,i["date"],i["hours"]]
          data.append(datatemp)
-    path=os.getcwd().replace("\\","/")     
+       
     
-    pathf=filedialog.askdirectory(initialdir=path,title="enter the folder path")     
+    pathf=filedialog.askdirectory(initialdir=paths,title="enter the folder path")     
     pd.DataFrame(data,columns=["iduser","name","date","hours"]).to_excel(pathf+"file.xlsx","sheet1")     
     return redirect(to="attendancedetails")
     

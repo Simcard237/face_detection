@@ -8,19 +8,18 @@ from time import strftime
 import pickle
 import os
 # Create your views here.
-
+global paths
+paths=os.getcwd().replace("\\","/")
 def checking(request):
     return render(request, "checking.html")
 
 def testapi(request):
-   path=os.getcwd().replace("\\","/") 
    fils=""
    try:
-    with open(path+"/static/assets/data/temp2.data","rb") as file:
-                fil=pickle.Unpickler(file).load()
-                print("etape 1 ", fil)     
+    with open(paths+"/static/assets/data/temp2.data","rb") as file:
+                fil=pickle.Unpickler(file).load()    
                 fils=attendance.objects.filter(iduser=fil).values()[0]
-    with open(path+"/static/assets/data/temp2.data","wb") as file:
+    with open(paths+"/static/assets/data/temp2.data","wb") as file:
          pass          
    
    except:pass

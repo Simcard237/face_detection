@@ -17,7 +17,8 @@ def testapi(request):
    try:
     with open(path+"/static/assets/data/temp1.data","rb") as file:
                 fils=pickle.Unpickler(file).load()     
-   
+    with open(path+"/static/assets/data/temp1.data","wb") as file:
+        pass
     
    except:pass
    if fils!="":
@@ -29,21 +30,18 @@ def adminregister(request):
     if request.method=="POST":
          a=request.POST["name"]
          b=request.POST["idt"]
-         
          if len(Users.objects.filter(idt=b).values())==0:
-             print("enter2")
              user=Users()
              user.name=a
              user.idt=b
              user.hour= datetime.now().strftime("%H:%M:%S")
              user.save()
-             print("pass")
              path=os.getcwd().replace("\\","/")
              with open(path+"/static/assets/data/temp.data","wb") as file:
                  fil=pickle.Pickler(file)
                  fil.dump({"value":request.POST["idt"]})
              return render(request, "browse.html",{"form":form, "message":1})    
-         else:
+         elif len(Users.objects.filter(idt=b).values())>0:
              return render(request,"browse.html",{"form":form,"message":2})  
    
 

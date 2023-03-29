@@ -50,7 +50,7 @@ class VideoCamera(object):
             resp=""
 
             if fr.face_locations(frame):
-                print(id)
+                print("je suis resp")
                 imfpath=path+"/static/assets/images/frame0.jpg"
                 foderpath=path+"/static/assets/data/db.data"
                 cv2.imwrite(imfpath,frame)
@@ -58,6 +58,7 @@ class VideoCamera(object):
                 if id!=1:
                     if not detect.identification(foderpath,imfpath):
                       resp=detect.face_saving(imfpath,foderpath,id)
+                      print("je suis resp", resp)
                     else:
                         resp=2   
                 else:
